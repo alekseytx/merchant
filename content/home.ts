@@ -7,24 +7,29 @@ export const homeConfig = {
     cta_primary: "Get Started",
     cta_secondary: "Learn More",
   },
-  stats: [
+    stats: [
     {
       value: "$500M+",
-      label: "Transactions Processed",
+      label: "Annual Processing Volume",
+      description: "Card payments securely processed for merchants each year.",
     },
     {
       value: "99.99%",
-      label: "Uptime Guarantee",
+      label: "Platform Uptime",
+      description: "Redundant infrastructure and monitoring to keep your payments online.",
     },
     {
       value: "150+",
-      label: "Countries Served",
+      label: "Countries & Verticals",
+      description: "Merchants operating across retail, restaurants, e-commerce, and more.",
     },
     {
       value: "24/7",
-      label: "Expert Support",
+      label: "Expert Merchant Support",
+      description: "US-based payments specialists available around the clock.",
     },
   ],
+
   features: [
     {
       id: "innovation",

@@ -3,6 +3,7 @@
 import type React from "react"
 import Link from "next/link"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 import { Hero } from "@/components/hero"
 import { Container } from "@/components/container"
@@ -136,11 +137,16 @@ const iconMap: Record<string, React.ReactNode> = {
 
 export default function HomePage() {
   const [showGetStartedModal, setShowGetStartedModal] = useState(false)
+  const router = useRouter()
 
   return (
     <>
       {/* Hero Section */}
-      <Hero {...homeConfig.hero} />
+      <Hero
+        {...homeConfig.hero}
+        onPrimaryClick={() => setShowGetStartedModal(true)}
+        onSecondaryClick={() => router.push("/contact")}
+      />
 
       {/* Stats Section */}
       <Section className="bg-primary/5 border-y border-border">
@@ -245,7 +251,9 @@ export default function HomePage() {
                 <p className="text-muted-foreground text-sm mb-4">{plan.description}</p>
                 <p className="text-3xl font-bold mb-6">
                   {plan.rate}
-                  {plan.rate !== "Custom" && <span className="text-sm text-muted-foreground ml-1">+ {plan.fee}</span>}
+                  {plan.rate !== "Custom" && (
+                    <span className="text-sm text-muted-foreground ml-1">+ {plan.fee}</span>
+                  )}
                 </p>
                 <ul className="space-y-3 mb-6">
                   {plan.features.map((feature, fidx) => (
@@ -265,12 +273,8 @@ export default function HomePage() {
                     w-full rounded-full text-sm font-semibold tracking-tight transition-all
                     ${
                       plan.highlighted
-                        ? // Primary plan: gradient pill
-                          "bg-gradient-to-r from-[#0B4AA8] to-[#1F6AD8] text-primary-foreground " +
-                          "shadow-md hover:shadow-lg hover:brightness-110"
-                        : // Other plans: outline pill
-                          "border-border/80 bg-background/80 text-foreground " +
-                          "hover:border-primary/60 hover:bg-background hover:text-foreground"
+                        ? "bg-gradient-to-r from-[#0B4AA8] to-[#1F6AD8] text-primary-foreground shadow-md hover:shadow-lg hover:brightness-110"
+                        : "border-border/80 bg-background/80 text-foreground hover:border-primary/60 hover:bg-background hover:text-foreground"
                     }
                   `}
                 >
@@ -282,8 +286,7 @@ export default function HomePage() {
         </Container>
       </Section>
 
-
-          {/* Security Section */}
+      {/* Security Section */}
       <Section
         eyebrow="Your Data is Safe"
         title="Security & Compliance"
@@ -314,7 +317,6 @@ export default function HomePage() {
         </Container>
       </Section>
 
-
       {/* FAQ */}
       <Section id="faq" eyebrow="Common Questions" title="Frequently Asked Questions" className="bg-secondary/30">
         <Container className="max-w-2xl">
@@ -322,7 +324,7 @@ export default function HomePage() {
         </Container>
       </Section>
 
-          {/* Final CTA */}
+      {/* Final CTA */}
       <Section className="bg-gradient-to-r from-primary/10 to-accent/10 border-t border-border">
         <Container className="text-center">
           <h2 className="text-4xl font-bold mb-4">Ready to Get Started?</h2>
@@ -347,10 +349,12 @@ export default function HomePage() {
               Start Free Trial
             </button>
 
-            {/* Secondary – outline pill, matches Learn More / Back */}
+            {/* Secondary – outline pill, redirects to /contact without using <a> inside <a> */}
             <Button
+              type="button"
               variant="outline"
               size="lg"
+              onClick={() => router.push("/contact")}
               className="
                 rounded-full px-8
                 border-border/80 bg-background/80
@@ -366,8 +370,10 @@ export default function HomePage() {
         </Container>
       </Section>
 
-
-      <GetStartedModal isOpen={showGetStartedModal} onClose={() => setShowGetStartedModal(false)} />
+      <GetStartedModal
+        isOpen={showGetStartedModal}
+        onClose={() => setShowGetStartedModal(false)}
+      />
     </>
   )
 }

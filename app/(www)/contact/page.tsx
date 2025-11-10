@@ -93,7 +93,7 @@ export default function ContactPage() {
                   <PhoneIcon />
                   <div>
                     <h3 className="font-semibold text-sm mb-1">Phone</h3>
-                    <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
+                    <p className="text-sm text-muted-foreground">+1 (888) 541-5897</p>
                     <p className="text-xs text-muted-foreground mt-1">Mon-Fri, 9am-6pm EST</p>
                   </div>
                 </div>

@@ -1,3 +1,6 @@
+"use client"
+
+import type React from "react"
 import Image from "next/image"
 import { Button } from "./button"
 import { Container } from "./container"
@@ -8,6 +11,8 @@ interface HeroProps {
   subheadline: string
   cta_primary: string
   cta_secondary: string
+  onPrimaryClick?: () => void
+  onSecondaryClick?: () => void
 }
 
 export function Hero({
@@ -16,13 +21,13 @@ export function Hero({
   subheadline,
   cta_primary,
   cta_secondary,
+  onPrimaryClick,
+  onSecondaryClick,
 }: HeroProps) {
   return (
     <section className="relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-28">
       <Container>
-        {/* reduced gap so columns sit closer together */}
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-8">
-          {/* Left side – text */}
           <div className="animate-fade-in">
             <p className="text-sm font-semibold tracking-wide text-primary mb-4">
               {eyebrow}
@@ -35,9 +40,11 @@ export function Hero({
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              {/* Primary CTA */}
+              {/* Get Started */}
               <Button
+                type="button"
                 size="lg"
+                onClick={onPrimaryClick}
                 className="
                   group rounded-full px-7
                   bg-gradient-to-r from-[#0B4AA8] to-[#1F6AD8]
@@ -62,10 +69,12 @@ export function Hero({
                 </svg>
               </Button>
 
-              {/* Secondary CTA – border a bit darker, stays visible on hover */}
+              {/* Learn More */}
               <Button
+                type="button"
                 size="lg"
                 variant="outline"
+                onClick={onSecondaryClick}
                 className="
                   rounded-full px-7
                   border-border/80 bg-background/80
@@ -80,7 +89,6 @@ export function Hero({
             </div>
           </div>
 
-          {/* Right side – banner image, no card/border/shadow */}
           <div className="relative mt-6 lg:mt-0 h-[260px] sm:h-[320px] lg:h-[420px] xl:h-[460px] animate-fade-in-delayed">
             <Image
               src="/prime_swipe_banner.png"
