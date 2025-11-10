@@ -255,7 +255,25 @@ export default function HomePage() {
                     </li>
                   ))}
                 </ul>
-                <Button variant={plan.highlighted ? "default" : "outline"} className="w-full">
+
+                {/* Get Started button – matches hero / final CTA / modal */}
+                <Button
+                  type="button"
+                  onClick={() => setShowGetStartedModal(true)}
+                  variant={plan.highlighted ? "default" : "outline"}
+                  className={`
+                    w-full rounded-full text-sm font-semibold tracking-tight transition-all
+                    ${
+                      plan.highlighted
+                        ? // Primary plan: gradient pill
+                          "bg-gradient-to-r from-[#0B4AA8] to-[#1F6AD8] text-primary-foreground " +
+                          "shadow-md hover:shadow-lg hover:brightness-110"
+                        : // Other plans: outline pill
+                          "border-border/80 bg-background/80 text-foreground " +
+                          "hover:border-primary/60 hover:bg-background hover:text-foreground"
+                    }
+                  `}
+                >
                   Get Started
                 </Button>
               </div>
@@ -264,22 +282,38 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      {/* Security Section */}
-      <Section eyebrow="Your Data is Safe" title="Security & Compliance">
+
+          {/* Security Section */}
+      <Section
+        eyebrow="Your Data is Safe"
+        title="Security & Compliance"
+        className="bg-primary/5 border-y border-border"
+      >
         <Container>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {homeConfig.security.features.map((item, idx) => (
               <div
                 key={idx}
-                className="rounded-lg border border-border bg-card p-6 text-center hover:border-primary/50 transition-colors"
+                className="
+                  rounded-2xl border border-border/70 bg-card/90 p-6
+                  text-left lg:text-center
+                  shadow-sm hover:border-primary/60 hover:shadow-md
+                  transition-all
+                "
               >
-                <p className="text-sm font-semibold text-primary mb-2">{item.label}</p>
-                <p className="text-xs text-muted-foreground">{item.description}</p>
+                <div className="inline-flex items-center gap-2 mb-3">
+                  <span className="h-2 w-2 rounded-full bg-[#0B4AA8]" />
+                  <p className="text-sm font-semibold text-primary">{item.label}</p>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {item.description}
+                </p>
               </div>
             ))}
           </div>
         </Container>
       </Section>
+
 
       {/* FAQ */}
       <Section id="faq" eyebrow="Common Questions" title="Frequently Asked Questions" className="bg-secondary/30">
@@ -288,26 +322,50 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      {/* Final CTA */}
+          {/* Final CTA */}
       <Section className="bg-gradient-to-r from-primary/10 to-accent/10 border-t border-border">
         <Container className="text-center">
           <h2 className="text-4xl font-bold mb-4">Ready to Get Started?</h2>
           <p className="text-lg text-muted-foreground mb-8 max-w-lg mx-auto">
             Join hundreds of companies processing millions of transactions securely with PrimeSwipe.
           </p>
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {/* Primary – gradient pill, matches main Get Started */}
             <button
+              type="button"
               onClick={() => setShowGetStartedModal(true)}
-              className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition"
+              className="
+                inline-flex items-center justify-center
+                px-8 py-3.5 rounded-full
+                bg-gradient-to-r from-[#0B4AA8] to-[#1F6AD8]
+                text-sm font-semibold tracking-tight text-primary-foreground
+                shadow-md hover:shadow-lg hover:brightness-110
+                transition-all
+              "
             >
               Start Free Trial
             </button>
-            <Button variant="outline" size="lg">
+
+            {/* Secondary – outline pill, matches Learn More / Back */}
+            <Button
+              variant="outline"
+              size="lg"
+              className="
+                rounded-full px-8
+                border-border/80 bg-background/80
+                text-sm font-semibold text-foreground
+                hover:border-primary/60 hover:bg-background
+                hover:text-foreground
+                transition-all
+              "
+            >
               Schedule Demo
             </Button>
           </div>
         </Container>
       </Section>
+
 
       <GetStartedModal isOpen={showGetStartedModal} onClose={() => setShowGetStartedModal(false)} />
     </>

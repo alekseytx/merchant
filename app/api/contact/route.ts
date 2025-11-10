@@ -1,28 +1,78 @@
-import { type NextRequest, NextResponse } from "next/server"
+// app/api/contact/route.ts
+import { NextResponse } from "next/server"
 
-export async function POST(request: NextRequest) {
+const WEBHOOK_URL =
+  "https://automations.mynytg.com/webhook/42c4ac74-3f4e-4f39-b572-91d335e81379"
+
+export async function POST(req: Request) {
   try {
-    const body = await request.json()
-    const { name, email, message } = body
+    const data = await req.json()
+    console.log("[/api/contact] incoming payload:", data)
 
-    // Validation
-    if (!name || !email || !message) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+    let webhookRes: Response
+
+    try {
+      webhookRes = await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+    } catch (err) {
+      console.error("[/api/contact] NETWORK error calling webhook:", err)
+
+      return NextResponse.json(
+        {
+          success: false,
+          stage: "network",
+          message: "Failed to reach webhook server",
+          error: String(err),
+        },
+        { status: 502 },
+      )
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      return NextResponse.json({ error: "Invalid email address" }, { status: 400 })
+    const webhookBody = await webhookRes.text().catch(() => "")
+    console.log(
+      "[/api/contact] webhook response:",
+      webhookRes.status,
+      webhookBody,
+    )
+
+    if (!webhookRes.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          stage: "webhook",
+          message: "Webhook request failed",
+          webhookStatus: webhookRes.status,
+          webhookBody,
+        },
+        { status: 500 },
+      )
     }
 
-    // In production, you would send the email here
-    // For now, just log and return success
-    console.log("Contact form submission:", { name, email, message })
-
-    return NextResponse.json({ message: "Message received successfully" }, { status: 200 })
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Contact form submitted successfully.",
+        webhookStatus: webhookRes.status,
+        webhookBody,
+      },
+      { status: 200 },
+    )
   } catch (error) {
-    console.error("Contact form error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("[/api/contact] Contact API error:", error)
+
+    return NextResponse.json(
+      {
+        success: false,
+        stage: "api",
+        message: "Unexpected error submitting contact form.",
+        error: String(error),
+      },
+      { status: 500 },
+    )
   }
 }

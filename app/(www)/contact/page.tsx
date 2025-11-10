@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import { PageHero } from "@/components/page-hero"
 import { Container } from "@/components/container"
 import { Section } from "@/components/section"
@@ -72,7 +73,17 @@ export default function ContactPage() {
                   Fill out the form below and our team will get back to you within 24 hours.
                 </p>
               </div>
-              <ContactForm />
+
+              {/* Keep webhook behavior; only styling fields to white */}
+              <div
+                className="
+                  [&_input]:bg-white [&_textarea]:bg-white [&_select]:bg-white
+                  [&_input]:border [&_textarea]:border [&_select]:border
+                  [&_input]:border-border [&_textarea]:border-border [&_select]:border-border
+                "
+              >
+                <ContactForm />
+              </div>
             </div>
 
             {/* Contact Info Cards */}
@@ -178,26 +189,36 @@ export default function ContactPage() {
         </Container>
       </Section>
 
-      {/* CTA Section */}
-      <Section className="bg-gradient-to-r from-primary/10 to-accent/10 border-t border-border">
-        <Container className="text-center">
-          <h2 className="text-3xl font-bold mb-4">Not Sure Where to Start?</h2>
-          <p className="text-lg text-muted-foreground mb-8 max-w-lg mx-auto">
-            Schedule a demo with our team to see how PrimeSwipe can streamline your payment processing.
-          </p>
-          <Button size="lg" className="group">
-            Schedule a Demo
-            <svg
-              className="h-4 w-4 group-hover:translate-x-1 transition-transform"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </Button>
-        </Container>
-      </Section>
+     {/* CTA Section */}
+<Section className="bg-gradient-to-r from-primary/10 to-accent/10 border-t border-border">
+  <Container className="text-center">
+    <h2 className="text-3xl sm:text-4xl font-bold mb-4">Not Sure Where to Start?</h2>
+    <p className="text-lg text-muted-foreground mb-8 max-w-lg mx-auto">
+      Schedule a demo with our team to see how PrimeSwipe can streamline your payment processing.
+    </p>
+
+    <Button
+      size="lg"
+      className="group px-8 h-12 text-base font-semibold"
+    >
+      Schedule a Demo
+      <svg
+        className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M13 7l5 5m0 0l-5 5m5-5H6"
+        />
+      </svg>
+    </Button>
+  </Container>
+</Section>
+
     </div>
   )
 }

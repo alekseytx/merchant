@@ -45,22 +45,57 @@ export function GetStartedModal({ isOpen, onClose }: GetStartedModalProps) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setIsSubmitted(true)
-    // API integration will be added in VS Code
-    setTimeout(() => {
-      onClose()
-      setFormData({
-        businessName: "",
-        email: "",
-        phone: "",
-        businessType: "",
-        monthlyVolume: "",
-        country: "",
-        firstName: "",
-        lastName: "",
+
+    // don't show success until we know the API call worked
+    setIsSubmitted(false)
+
+    try {
+      const payload = {
+        ...formData,
+        stepCompleted: step,
+        submittedAt: new Date().toISOString(),
+        source: "PrimeSwipe Get Started Modal",
+      }
+
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       })
-      setIsSubmitted(false)
-    }, 2000)
+
+      const result = await response.json().catch(() => null)
+      console.log("[GetStartedModal] Contact API result:", result)
+
+      if (!response.ok) {
+        console.error("[GetStartedModal] API error:", result)
+        // you could surface a visible error message here if you want
+        return
+      }
+
+      // ✅ API succeeded – now show success UI
+      setIsSubmitted(true)
+
+      setTimeout(() => {
+        onClose()
+        setFormData({
+          businessName: "",
+          email: "",
+          phone: "",
+          businessType: "",
+          monthlyVolume: "",
+          country: "",
+          firstName: "",
+          lastName: "",
+        })
+        setIsSubmitted(false)
+        // step will reset via useEffect when isOpen becomes false
+      }, 2000)
+    } catch (error) {
+      console.error("[GetStartedModal] Error sending to /api/contact:", error)
+      // optional: show an error message state here
+    }
   }
 
   if (!isOpen) return null
@@ -114,7 +149,7 @@ export function GetStartedModal({ isOpen, onClose }: GetStartedModalProps) {
                       onChange={handleInputChange}
                       required
                       placeholder="Your business name"
-                      className="w-full px-4 py-2 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full px-4 py-2 rounded-lg border border-input bg-white focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
                   <div>
@@ -124,7 +159,7 @@ export function GetStartedModal({ isOpen, onClose }: GetStartedModalProps) {
                       value={formData.businessType}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full px-4 py-2 rounded-lg border border-input bg-white focus:outline-none focus:ring-2 focus:ring-primary"
                     >
                       <option value="">Select business type</option>
                       <option value="retail">Retail</option>
@@ -143,7 +178,7 @@ export function GetStartedModal({ isOpen, onClose }: GetStartedModalProps) {
                       value={formData.monthlyVolume}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full px-4 py-2 rounded-lg border border-input bg-white focus:outline-none focus:ring-2 focus:ring-primary"
                     >
                       <option value="">Select range</option>
                       <option value="0-10k">$0 - $10,000</option>
@@ -170,7 +205,7 @@ export function GetStartedModal({ isOpen, onClose }: GetStartedModalProps) {
                         onChange={handleInputChange}
                         required
                         placeholder="First name"
-                        className="w-full px-4 py-2 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="w-full px-4 py-2 rounded-lg border border-input bg-white focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
                     <div>
@@ -182,7 +217,7 @@ export function GetStartedModal({ isOpen, onClose }: GetStartedModalProps) {
                         onChange={handleInputChange}
                         required
                         placeholder="Last name"
-                        className="w-full px-4 py-2 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="w-full px-4 py-2 rounded-lg border border-input bg-white focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
                   </div>
@@ -195,7 +230,7 @@ export function GetStartedModal({ isOpen, onClose }: GetStartedModalProps) {
                       onChange={handleInputChange}
                       required
                       placeholder="you@company.com"
-                      className="w-full px-4 py-2 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full px-4 py-2 rounded-lg border border-input bg-white focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
                   <div>
@@ -207,7 +242,7 @@ export function GetStartedModal({ isOpen, onClose }: GetStartedModalProps) {
                       onChange={handleInputChange}
                       required
                       placeholder="+1 (555) 000-0000"
-                      className="w-full px-4 py-2 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full px-4 py-2 rounded-lg border border-input bg-white focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
                 </div>
@@ -224,7 +259,7 @@ export function GetStartedModal({ isOpen, onClose }: GetStartedModalProps) {
                       value={formData.country}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full px-4 py-2 rounded-lg border border-input bg-white focus:outline-none focus:ring-2 focus:ring-primary"
                     >
                       <option value="">Select country</option>
                       <option value="us">United States</option>
@@ -295,7 +330,7 @@ export function GetStartedModal({ isOpen, onClose }: GetStartedModalProps) {
                       <span className="font-medium capitalize">{formData.country}</span>
                     </div>
                   </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-900">
+                  <div className="rounded-lg p-4 text-sm bg-[#E8F1FF] border border-[#C3D5FF] text-[#0B4AA8]">
                     <p className="font-medium mb-2">What happens next?</p>
                     <ul className="space-y-1 text-xs">
                       <li>✓ Our team reviews your application</li>
@@ -307,19 +342,52 @@ export function GetStartedModal({ isOpen, onClose }: GetStartedModalProps) {
                 </div>
               )}
 
-              {/* Footer */}
-              <div className="flex gap-3 pt-6 border-t border-border">
+              {/* Footer – buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-border">
                 {step > 1 && (
-                  <Button type="button" variant="outline" onClick={handlePrevStep} className="flex-1 bg-transparent">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handlePrevStep}
+                    className="
+                      flex-1 rounded-full
+                      border-border/80 bg-background/80
+                      text-sm font-semibold text-foreground
+                      hover:border-primary/60 hover:bg-background
+                      hover:text-foreground
+                      transition-all
+                    "
+                  >
                     Back
                   </Button>
                 )}
                 {step < 4 ? (
-                  <Button type="button" onClick={handleNextStep} className="flex-1">
+                  <Button
+                    type="button"
+                    onClick={handleNextStep}
+                    className="
+                      flex-1 rounded-full
+                      bg-gradient-to-r from-[#0B4AA8] to-[#1F6AD8]
+                      text-sm font-semibold tracking-tight
+                      shadow-md hover:shadow-lg
+                      hover:brightness-110
+                      transition-all
+                    "
+                  >
                     Next Step
                   </Button>
                 ) : (
-                  <Button type="submit" className="flex-1">
+                  <Button
+                    type="submit"
+                    className="
+                      flex-1 rounded-full
+                      bg-gradient-to-r from-[#0B4AA8] to-[#1F6AD8]
+                      text-sm font-semibold tracking-tight
+                      shadow-md hover:shadow-lg
+                      hover:brightness-110
+                      transition-all
+                    "
+                  >
                     Submit Application
                   </Button>
                 )}

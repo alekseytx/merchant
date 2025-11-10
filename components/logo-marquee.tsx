@@ -1,32 +1,35 @@
 "use client"
-import { useState } from "react"
 
 interface LogoMarqueeProps {
   logos: string[]
 }
 
 export function LogoMarquee({ logos }: LogoMarqueeProps) {
-  const [isPaused, setIsPaused] = useState(false)
+  const items = [...logos, ...logos] // loop seamlessly
 
   return (
-    <div className="w-full overflow-hidden py-8">
+    <div className="w-full py-8 overflow-hidden group">
       <style>{`
-        @keyframes scroll {
+        @keyframes marqueeScroll {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        .marquee {
-          animation: scroll 20s linear infinite;
+        .logo-marquee-track {
+          animation: marqueeScroll 22s linear infinite;
         }
-        .marquee:hover {
+        .group:hover .logo-marquee-track {
           animation-play-state: paused;
         }
       `}</style>
-      <div className="marquee flex gap-12">
-        {[...logos, ...logos].map((logo, idx) => (
-          <div key={idx} className="flex items-center gap-8 min-w-max">
-            <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">{logo}</span>
-          </div>
+
+      <div className="logo-marquee-track flex items-center gap-12">
+        {items.map((logo, idx) => (
+          <span
+            key={idx}
+            className="whitespace-nowrap text-sm sm:text-base font-semibold tracking-[0.16em] uppercase text-muted-foreground"
+          >
+            {logo}
+          </span>
         ))}
       </div>
     </div>
